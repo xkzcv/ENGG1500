@@ -38,6 +38,8 @@ while True:
         sys.stdout.write("Obstacle detected. Stopping.\n")
         continue
 
-    thresholds = {0: [motor_left.set_forwards(), motor_right.set_forwards(), motor_left.duty(40), motor_right.duty(40)]}
+    thresholds = {0: [motor_left.set_forwards(), motor_right.set_forwards(), motor_left.duty(40), motor_right.duty(40)],
+                  1: [motor_left.set_forwards(), motor_right.set_forwards(), motor_left.duty(20), motor_right.duty(40)],
+                  -1: [motor_left.set_forwards(), motor_right.set_forwards(), motor_left.duty(40), motor_right.duty(20)]}
 
 
