@@ -40,6 +40,7 @@ while True:
     line_pos = max(-3, min(3, line_pos))
     base_speed = 37.5
 
+
     k = 1.0
 
     adjust = k * (line_pos / 3)  # Normalize between -1 and 1
