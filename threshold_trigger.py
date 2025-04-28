@@ -30,19 +30,6 @@ while True:
     motor_left.set_forwards()
     motor_right.set_forwards()
 
-    if line_pos == 0:
-        motor_left.duty(40)
-        motor_right.duty(40)
-    elif line_pos == 1:
-        motor_left.duty(20)
-        motor_right.duty(40)
-    elif line_pos == -1:
-        motor_left.duty(40)
-        motor_right.duty(20)
-    else:
-        motor_left.duty(0)
-        motor_right.duty(0)
-
-    sys.stdout.write(f"Value LL={value_LL:.2f} | Value LL={value_L:.2f} | Value LL={value_M:.2f} | Value LL={value_R:.2f} | Value LL={value_RR:.2f}\n")
+    sys.stdout.write(f"Value LL={value_LL:.2f} | Value L={value_L:.2f} | Value M={value_M:.2f} | Value R={value_R:.2f} | Value RR={value_RR:.2f}\n")
 
 
