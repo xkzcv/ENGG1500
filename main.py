@@ -5,6 +5,7 @@
 from motor import Motor
 from machine import Pin
 import sys
+import time
 
 # --- Configuration --- #
 # Motor Pins
@@ -18,6 +19,11 @@ V3 = Pin(19, Pin.IN)
 V4 = Pin(18, Pin.IN)
 V5 = Pin(17, Pin.IN)
 v_all = [V5, V4, V3, V2, V1]
+
+# Movement duration
+STEP_TIME = 0.05  # length of step
+SLEEP_AFTER_STOP = 0.07  # pause after stopping. 
+
 
 # State functions
 current_state = 'forward'
@@ -78,6 +84,8 @@ def park():
     motor_left.duty(0)
     motor_right.duty(0)
 
+
+
 # --- Main Loop --- #
 while True:
     sV_all = [sensor.value() for sensor in v_all]
@@ -94,3 +102,8 @@ while True:
         sharp_right()
     else:
         searching()
+        
+    time.sleep(STEP_TIME)
+    park()
+    time.sleep(SLEEP_AFTER_STOP)
+
