@@ -17,52 +17,80 @@ V2 = Pin(20, Pin.IN)
 V3 = Pin(19, Pin.IN)
 V4 = Pin(18, Pin.IN)
 V5 = Pin(17, Pin.IN)
-v_all = [V1, V2, V3, V4, V5]
+v_all = [V5, V4, V3, V2, V1]
 
-def centre():
+# State functions
+current_state = 'forward'
+
+def forward():
     motor_left.set_forwards()
     motor_right.set_forwards()
     motor_left.duty(40)
     motor_right.duty(40)
-
-def left():
-    motor_left.set_forwards()
-    motor_right.set_forwards()
-    motor_left.duty(30)
-    motor_right.duty(50)
+    current_state = 'forward'
 
 def sharp_left():
-    motor_left.set_forwards()
+    motor_left.set_backwards()
     motor_right.set_forwards()
-    motor_left.duty(20)
-    motor_right.duty(60)
-
-def right():
-    motor_left.set_forwards()
-    motor_right.set_forwards()
-    motor_left.duty(50)
-    motor_right.duty(30)
+    motor_left.duty(40)
+    motor_right.duty(40)
+    current_state = 'left'
 
 def sharp_right():
     motor_left.set_forwards()
-    motor_right.set_forwards()
-    motor_left.duty(60)
-    motor_right.duty(20)
+    motor_right.set_backwards()
+    motor_left.duty(40)
+    motor_right.duty(40)
+    current_state = 'right'
 
+def smooth_left():
+    motor_left.set_forwards()
+    motor_right.set_forwards()
+    motor_left.duty(30)
+    motor_right.duty(40)
+    current_state = 'left'
+
+def smooth_right():
+    motor_left.set_forwards()
+    motor_right.set_forwards()
+    motor_left.duty(40)
+    motor_right.duty(30)
+    current_state = 'right'
+
+def reverse():
+    motor_left.set_backwards()
+    motor_right.set_backwards()
+    motor_left.duty(40)
+    motor_right.duty(40)
+
+def searching():
+    if current_state == 'left':
+        sharp_left()
+    elif current_state ==  'right':
+        sharp_right()
+    elif current_state == 'forward':
+        reverse()
+
+
+def park():
+    motor_left.set_forwards()
+    motor_right.set_forwards()
+    motor_left.duty(0)
+    motor_right.duty(0)
+
+# --- Main Loop --- #
 while True:
     sV_all = [sensor.value() for sensor in v_all]
     sys.stdout.write(f"Sensors: {sV_all}.\n")
-    if sV_all == [0, 0, 1, 0, 0]:
-        centre()
+    if sV_all in ([0, 0, 1, 0, 0], [0, 1, 1, 1, 0]):
+        forward()
     elif sV_all in ([0, 1, 1, 0, 0], [0, 1, 0, 0, 0]):
-        left()
+        smooth_left()
     elif sV_all in ([1, 1, 0, 0, 0], [1, 0, 0, 0, 0]):
         sharp_left()
     elif sV_all in ([0, 0, 1, 1, 0], [0, 0, 0, 1, 0]):
-        right()
+        smooth_right()
     elif sV_all in ([0, 0, 0, 1, 1], [0, 0, 0, 0, 1]):
         sharp_right()
     else:
-        # Lost line — stop or slow down to recover
-        motor_left.duty(0)
-        motor_right.duty(0)
+        searching()
